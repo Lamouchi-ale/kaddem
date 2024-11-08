@@ -1,6 +1,12 @@
 pipeline {
     agent any
     stages {
+	stage('Check Docker Version') {
+    steps {
+        sh 'docker --version'
+    }
+}
+
         stage('Checkout') {
             steps {
                 // Ajoutez le nom de la branche à cloner
