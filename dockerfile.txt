@@ -1,5 +1,5 @@
-# Dockerfile
-FROM openjdk:17-jdk-slim
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+
+FROM openjdk:11-jdk-alpine
+EXPOSE 8083
+ADD target/kaddem-0.0.1-SNAPSHOT.jar
+ENTRYPOINT ["java","-jar","/kaddem-0.0.1-SNAPSHOT.jar"]
