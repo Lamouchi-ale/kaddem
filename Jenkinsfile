@@ -13,7 +13,7 @@ pipeline {
                 git branch: 'azizbranch', url: 'https://github.com/Lamouchi-ale/kaddem.git', credentialsId: 'b068dfbe-48f1-4914-9540-ccc68b451ac5'
             }
         }
-        
+
         stage('Build JAR') {
             steps {
                 script {
@@ -44,18 +44,20 @@ pipeline {
 
         stage('Clean Up') {
             steps {
-                
                 sh "docker rmi azizaydi/kaddem-app:${env.BUILD_ID}"
             }
         }
-	stage('Deploy with Docker Compose') {
+
+        stage('Deploy with Docker Compose') {
             steps {
                 script {
-                     dir('kaddem') {
-                        sh 'docker-compose up -d'
+                    // Ensure any existing containers are stopped and removed before deployment
+                    dir('kaddem') {
+                        sh 'docker-compose down -v' // Shut down existing containers and remove volumes
+                        sh 'docker-compose up -d'  // Start the containers in detached mode
                     }
                 }
             }
-	}
+        }
     }
 }
