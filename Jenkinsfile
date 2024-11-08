@@ -17,7 +17,6 @@ pipeline {
         stage('Build JAR') {
             steps {
                 script {
-                    // Run Maven to build the project and generate the JAR file
                     sh 'mvn clean package'
                 }
             }
