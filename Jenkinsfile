@@ -6,7 +6,6 @@ pipeline {
         sh 'docker --version'
     }
 }
-
         stage('Checkout') {
             steps {
                 // Ajoutez le nom de la branche à cloner
