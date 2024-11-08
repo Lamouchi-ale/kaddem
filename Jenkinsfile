@@ -51,8 +51,9 @@ pipeline {
 	stage('Deploy with Docker Compose') {
             steps {
                 script {
-                    // Démarrer les services Docker via Docker Compose
-                    sh 'docker-compose up -d'
+                     dir('kaddem') {
+                        sh 'docker-compose up -d'
+                    }
                 }
             }
 	}
