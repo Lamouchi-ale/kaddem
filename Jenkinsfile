@@ -48,5 +48,12 @@ pipeline {
                 sh "docker rmi azizaydi/kaddem-app:${env.BUILD_ID}"
             }
         }
+	stage('Deploy with Docker Compose') {
+            steps {
+                script {
+                    // Démarrer les services Docker via Docker Compose
+                    sh 'docker-compose up -d'
+                }
+            }
     }
 }
