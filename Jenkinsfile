@@ -26,7 +26,7 @@ pipeline {
             steps {
                 script {
                     // Ensure the correct Dockerfile and context are used
-                    dockerImage = docker.build("kaddem-app:${env.BUILD_ID}", '.')
+                    dockerImage = docker.build("azizaydi/kaddem-app:${env.BUILD_ID}", '.')
                 }
             }
         }
