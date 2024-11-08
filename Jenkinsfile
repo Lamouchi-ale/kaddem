@@ -45,7 +45,7 @@ pipeline {
         stage('Clean Up') {
             steps {
                 // Remove the locally built Docker image to save space
-                sh "docker rmi kaddem-app:${env.BUILD_ID}"
+                sh "docker rmi azizaydi/kaddem-app:${env.BUILD_ID}"
             }
         }
     }
