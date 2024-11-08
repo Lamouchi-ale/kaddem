@@ -1,38 +1,51 @@
 pipeline {
     agent any
     stages {
-	stage('Check Docker Version') {
-    steps {
-        sh 'docker --version'
-    }
-}
+        stage('Check Docker Version') {
+            steps {
+                sh 'docker --version'
+            }
+        }
+
         stage('Checkout') {
             steps {
-                // Ajoutez le nom de la branche à cloner
+                // Checkout the code from the 'azizbranch' branch
                 git branch: 'azizbranch', url: 'https://github.com/Lamouchi-ale/kaddem.git', credentialsId: 'b068dfbe-48f1-4914-9540-ccc68b451ac5'
             }
         }
         
-        stage('Build Docker Image') {
+        stage('Build JAR') {
             steps {
                 script {
-                    dockerImage = docker.build("kaddem-app:${env.BUILD_ID}")
+                    // Run Maven to build the project and generate the JAR file
+                    sh 'mvn clean package'
                 }
             }
         }
-        
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Ensure the correct Dockerfile and context are used
+                    dockerImage = docker.build("kaddem-app:${env.BUILD_ID}", '.')
+                }
+            }
+        }
+
         stage('Push Docker Image') {
             steps {
                 script {
+                    // Push the Docker image to the registry
                     docker.withRegistry('https://index.docker.io/v1/', 'b068dfbe-48f1-4914-9540-ccc68b451ac5') {
                         dockerImage.push()
                     }
                 }
             }
         }
-        
+
         stage('Clean Up') {
             steps {
+                // Remove the locally built Docker image to save space
                 sh "docker rmi kaddem-app:${env.BUILD_ID}"
             }
         }
