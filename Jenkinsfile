@@ -46,8 +46,8 @@ pipeline {
         stage('Run Unit Tests') {
             steps {
                 script {
-                    // Exécuter les tests unitaires avec Maven
-                    sh './mvnw test'  // Remplacez avec la commande adaptée à votre projet (par ex. 'mvn test' ou 'gradle test')
+                   sh 'chmod +x mvnw'
+                    sh './mvnw test'
                 }
             }
         }
