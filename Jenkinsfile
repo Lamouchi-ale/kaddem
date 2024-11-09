@@ -42,11 +42,34 @@ pipeline {
             }
         }
 
-        stage('Clean Up') {
+        // Stage des tests unitaires
+        stage('Run Unit Tests') {
             steps {
-                sh "docker rmi azizaydi/kaddem-app:${env.BUILD_ID}"
+                script {
+                    // Exécuter les tests unitaires avec Maven
+                    sh './mvnw test'  // Remplacez avec la commande adaptée à votre projet (par ex. 'mvn test' ou 'gradle test')
+                }
             }
         }
+
+       stage('Clean Up') {
+    steps {
+        script {
+            // Suppression de l'image Docker après le déploiement
+            sh "docker rmi azizaydi/kaddem-app:${env.BUILD_ID}"
+
+            // Suppression des conteneurs arrêtés
+            sh 'docker container prune -f'
+
+            // Suppression des volumes non utilisés
+            sh 'docker volume prune -f'
+
+            // Suppression des réseaux non utilisés
+            sh 'docker network prune -f'
+        }
+    }
+}
+
 
         stage('Deploy with Docker Compose') {
             steps {
