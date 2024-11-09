@@ -23,7 +23,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-// Assurez-vous que l'extension Mockito est utilisée pour les tests
+// Ensure the Mockito extension is used for the tests
 @ExtendWith(MockitoExtension.class)
 public class EtudiantServiceImplTest {
 
@@ -47,7 +47,6 @@ public class EtudiantServiceImplTest {
     private Equipe equipe;
     private Cours cours;
 
-    // Mocked Set for Etudiants in Equipe
     @Mock
     private Set<Etudiant> mockEtudiants;
 
@@ -64,13 +63,13 @@ public class EtudiantServiceImplTest {
 
         cours = new Cours(); // Initialize cours
 
-        // Mock the behavior of getEtudiants() to return a mocked Set
-        when(equipe.getEtudiants()).thenReturn(mockEtudiants); // Mocking the method correctly
+        // Using lenient to avoid unnecessary stubbing exception
+        lenient().when(equipe.getEtudiants()).thenReturn(mockEtudiants); // Mocking the method correctly
     }
 
     @Test
     void testAddAndAssignEtudiantToEquipeAndContract() {
-        // Mock the repository to return a specific contract and team
+        // Mock repository to return a specific contract and team
         when(contratRepository.findById(1)).thenReturn(java.util.Optional.of(contrat));
         when(equipeRepository.findById(1)).thenReturn(java.util.Optional.of(equipe));
 
@@ -140,5 +139,3 @@ public class EtudiantServiceImplTest {
         verify(etudiantRepository).findEtudiantsByNomEAndPrenomEAndOp("Alice", "Smith", Option.SE);
     }
 }
-
-
