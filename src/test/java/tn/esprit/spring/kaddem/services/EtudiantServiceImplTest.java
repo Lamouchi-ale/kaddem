@@ -33,6 +33,7 @@ public class EtudiantServiceImplTest {
 
     @Mock
     private EquipeRepository equipeRepository;
+
     @Mock
     private CoursRepository coursRepository;
 
@@ -43,7 +44,6 @@ public class EtudiantServiceImplTest {
     private Contrat contrat;
     private Equipe equipe;
     private Cours cours;
-
 
     // Méthode exécutée avant chaque test pour initialiser les objets
     @BeforeEach
@@ -57,6 +57,8 @@ public class EtudiantServiceImplTest {
 
         equipe = new Equipe();
         equipe.setIdEquipe(1);
+
+        cours = new Cours(); // Initialize cours
     }
 
     @Test
@@ -118,22 +120,22 @@ public class EtudiantServiceImplTest {
 
     @Test
     void testRetrieveEtudiantsByAdvancedCriteria() {
-        // Créer des étudiants
+        // Créer des étudiants avec des options
         Etudiant etudiant1 = new Etudiant("Alice", "Smith", Option.SE);
         Etudiant etudiant2 = new Etudiant("Bob", "Johnson", Option.GAMIX);
 
-        // Simuler le comportement du repository pour renvoyer des étudiants filtrés par les critères
+        // Mock la méthode de recherche selon l'option
         when(etudiantRepository.findEtudiantsByNomEAndPrenomEAndOp("Alice", "Smith", Option.SE))
                 .thenReturn(Arrays.asList(etudiant1));
 
-        // Appeler la méthode du service
-        List<Etudiant> etudiants = etudiantService.retrieveEtudiantsByAdvancedCriteria("Alice", "Smith", Option.GAMIX);
+        // Appeler la méthode du service avec les critères correspondants
+        List<Etudiant> etudiants = etudiantService.retrieveEtudiantsByAdvancedCriteria("Alice", "Smith", Option.SE);
 
         // Vérifier que la liste contient bien un étudiant
         assertEquals(1, etudiants.size());
         assertEquals("Alice", etudiants.get(0).getNomE());
 
-        // Vérifier que la méthode du repository a été appelée
-        verify(etudiantRepository).findEtudiantsByNomEAndPrenomEAndOp("Alice", "Smith", Option.GAMIX);
+        // Vérifier que la méthode du repository a été appelée avec les bons arguments
+        verify(etudiantRepository).findEtudiantsByNomEAndPrenomEAndOp("Alice", "Smith", Option.SE);
     }
 }
