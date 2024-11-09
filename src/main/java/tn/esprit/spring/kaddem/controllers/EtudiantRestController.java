@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.spring.kaddem.entities.Etudiant;
+import tn.esprit.spring.kaddem.entities.Option;
 import tn.esprit.spring.kaddem.services.IEtudiantService;
 
 import java.util.List;
@@ -65,6 +66,20 @@ public class EtudiantRestController {
 	public List<Etudiant> getEtudiantsParDepartement(@PathVariable("idDepartement") Integer idDepartement) {
 
 		return etudiantService.getEtudiantsByDepartement(idDepartement);
+	}
+	@GetMapping("/retrieve-by-cours/{cours-id}")
+	public List<Etudiant> getEtudiantsByCours(@PathVariable("cours-id") Integer coursId) {
+		return etudiantService.retrieveEtudiantsByCours(coursId);
+	}
+
+
+	@GetMapping("/retrieve-by-criteria")
+	public List<Etudiant> getEtudiantsByAdvancedCriteria(
+			@RequestParam(required = false) String nom,
+			@RequestParam(required = false) String prenom,
+			@RequestParam(required = false) Option option) {
+
+		return etudiantService.retrieveEtudiantsByAdvancedCriteria(nom, prenom, option);
 	}
 
 }

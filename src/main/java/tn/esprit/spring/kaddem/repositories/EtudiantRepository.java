@@ -4,7 +4,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import tn.esprit.spring.kaddem.entities.Cours;
 import tn.esprit.spring.kaddem.entities.Etudiant;
+import tn.esprit.spring.kaddem.entities.Option;
 
 import java.util.List;
 
@@ -13,4 +15,8 @@ public interface EtudiantRepository extends CrudRepository<Etudiant,Integer> {
     public List<Etudiant> findEtudiantsByDepartement_IdDepart(Integer idDepart);
 @Query("Select e From Etudiant e where e.nomE= :nomE and e.prenomE= :prenomE")
     public Etudiant findByNomEAndPrenomE(@Param("nomE") String nomE, @Param("prenomE") String prenomE);
+    @Query("SELECT e FROM Etudiant e JOIN e.cours c WHERE c = :cours")
+    List<Etudiant> findEtudiantsByCours(@Param("cours") Cours cours);
+
+    List<Etudiant> findEtudiantsByNomEAndPrenomEAndOp(String nom, String prenom, Option option);
 }
