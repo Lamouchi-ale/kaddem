@@ -60,29 +60,29 @@ public class EtudiantServiceImplTest {
         contrat = new Contrat();
         contrat.setIdContrat(1);
 
-        equipe = new Equipe();
-        equipe.setIdEquipe(1);
+        equipe = mock(Equipe.class); // Mocking Equipe explicitly
 
         cours = new Cours(); // Initialize cours
 
         // Mock the behavior of getEtudiants() to return a mocked Set
-        when(equipe.getEtudiants()).thenReturn(mockEtudiants);
+        when(equipe.getEtudiants()).thenReturn(mockEtudiants); // Mocking the method correctly
     }
+
     @Test
     void testAddAndAssignEtudiantToEquipeAndContract() {
-        // Mock du repository pour retourner un contrat et une équipe spécifiques
+        // Mock the repository to return a specific contract and team
         when(contratRepository.findById(1)).thenReturn(java.util.Optional.of(contrat));
         when(equipeRepository.findById(1)).thenReturn(java.util.Optional.of(equipe));
 
-        // Appeler la méthode du service
+        // Call the service method
         Etudiant result = etudiantService.addAndAssignEtudiantToEquipeAndContract(etudiant, 1, 1);
 
-        // Vérifier que l'étudiant n'est pas nul et que les informations sont correctes
+        // Verify the result and the interactions
         assertNotNull(result);
         assertEquals("John", result.getNomE());
         assertEquals("Doe", result.getPrenomE());
 
-        // Vérifier que les méthodes du repository ont bien été appelées
+        // Verify repository methods were called
         verify(contratRepository).findById(1);
         verify(equipeRepository).findById(1);
     }
@@ -103,46 +103,42 @@ public class EtudiantServiceImplTest {
 
     @Test
     void testRetrieveEtudiantsByCours() {
-        // Simuler le comportement du repository Cours pour renvoyer un cours spécifique
+        // Mock Cours repository to return a specific course
         when(coursRepository.findById(1)).thenReturn(java.util.Optional.of(cours));
 
-        // Simuler le comportement du repository pour renvoyer des étudiants inscrits au cours
         Etudiant etudiant1 = new Etudiant("Alice", "Smith");
         Etudiant etudiant2 = new Etudiant("Bob", "Johnson");
 
         when(etudiantRepository.findEtudiantsByCours(cours)).thenReturn(Arrays.asList(etudiant1, etudiant2));
 
-        // Appeler la méthode du service
+        // Call service method
         List<Etudiant> etudiants = etudiantService.retrieveEtudiantsByCours(1);
 
-        // Vérifier que la liste contient les bons étudiants
+        // Verify results
         assertEquals(2, etudiants.size());
         assertEquals("Alice", etudiants.get(0).getNomE());
         assertEquals("Bob", etudiants.get(1).getNomE());
 
-        // Vérifier que les méthodes des repositories ont bien été appelées
+        // Verify repository methods
         verify(coursRepository).findById(1);
         verify(etudiantRepository).findEtudiantsByCours(cours);
     }
 
     @Test
     void testRetrieveEtudiantsByAdvancedCriteria() {
-        // Créer des étudiants avec des options
         Etudiant etudiant1 = new Etudiant("Alice", "Smith", Option.SE);
         Etudiant etudiant2 = new Etudiant("Bob", "Johnson", Option.GAMIX);
 
-        // Mock la méthode de recherche selon l'option
         when(etudiantRepository.findEtudiantsByNomEAndPrenomEAndOp("Alice", "Smith", Option.SE))
                 .thenReturn(Arrays.asList(etudiant1));
 
-        // Appeler la méthode du service avec les critères correspondants
         List<Etudiant> etudiants = etudiantService.retrieveEtudiantsByAdvancedCriteria("Alice", "Smith", Option.SE);
 
-        // Vérifier que la liste contient bien un étudiant
         assertEquals(1, etudiants.size());
         assertEquals("Alice", etudiants.get(0).getNomE());
 
-        // Vérifier que la méthode du repository a été appelée avec les bons arguments
         verify(etudiantRepository).findEtudiantsByNomEAndPrenomEAndOp("Alice", "Smith", Option.SE);
     }
 }
+
+
