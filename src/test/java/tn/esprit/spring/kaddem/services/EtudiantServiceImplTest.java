@@ -18,6 +18,8 @@ import tn.esprit.spring.kaddem.repositories.CoursRepository;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -45,7 +47,10 @@ public class EtudiantServiceImplTest {
     private Equipe equipe;
     private Cours cours;
 
-    // Méthode exécutée avant chaque test pour initialiser les objets
+    // Mocked Set for Etudiants in Equipe
+    @Mock
+    private Set<Etudiant> mockEtudiants;
+
     @BeforeEach
     void setUp() {
         etudiant = new Etudiant();
@@ -59,8 +64,10 @@ public class EtudiantServiceImplTest {
         equipe.setIdEquipe(1);
 
         cours = new Cours(); // Initialize cours
-    }
 
+        // Mock the behavior of getEtudiants() to return a mocked Set
+        when(equipe.getEtudiants()).thenReturn(mockEtudiants);
+    }
     @Test
     void testAddAndAssignEtudiantToEquipeAndContract() {
         // Mock du repository pour retourner un contrat et une équipe spécifiques
