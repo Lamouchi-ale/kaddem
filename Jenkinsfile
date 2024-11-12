@@ -22,6 +22,15 @@ pipeline {
             }
         }
 
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    // Run the SonarQube analysis and send results to the SonarQube server
+                    sh 'mvn sonar:sonar -Dsonar.projectKey=kaddem -Dsonar.host.url=http://localhost:9000 -Dsonar.login=squ_5aa3a90c18655b36d409d5c114e16c200a3527f4'
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
@@ -42,34 +51,28 @@ pipeline {
             }
         }
 
-        // Stage des tests unitaires
         stage('Run Unit Tests') {
             steps {
                 script {
-                   sh 'chmod +x mvnw'
+                    sh 'chmod +x mvnw'
                     sh './mvnw test'
                 }
             }
         }
 
-       stage('Clean Up') {
-    steps {
-        script {
-            // Suppression de l'image Docker après le déploiement
-            sh "docker rmi azizaydi/kaddem-app:${env.BUILD_ID}"
+        stage('Clean Up') {
+            steps {
+                script {
+                    // Remove the Docker image after deployment
+                    sh "docker rmi azizaydi/kaddem-app:${env.BUILD_ID}"
 
-            // Suppression des conteneurs arrêtés
-            sh 'docker container prune -f'
-
-            // Suppression des volumes non utilisés
-            sh 'docker volume prune -f'
-
-            // Suppression des réseaux non utilisés
-            sh 'docker network prune -f'
+                    // Remove stopped containers, unused volumes, and networks
+                    sh 'docker container prune -f'
+                    sh 'docker volume prune -f'
+                    sh 'docker network prune -f'
+                }
+            }
         }
-    }
-}
-
 
         stage('Deploy with Docker Compose') {
             steps {
