@@ -31,6 +31,15 @@ pipeline {
             }
         }
 
+        stage('Deploy to Nexus') {
+            steps {
+                script {
+                    // Deploy the built JAR to Nexus, skipping tests if desired
+                    sh 'mvn deploy -DskipTests'
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
