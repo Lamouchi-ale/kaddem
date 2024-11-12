@@ -1,18 +1,30 @@
 pipeline {
     agent any
     stages {
-        stage('Check Docker Version') {
-            steps {
-                sh 'docker --version'
-            }
-        }
 
         stage('Checkout') {
             steps {
-                // Checkout the code from the 'azizbranch' branch
+
                 git branch: 'azizbranch', url: 'https://github.com/Lamouchi-ale/kaddem.git', credentialsId: 'b068dfbe-48f1-4914-9540-ccc68b451ac5'
             }
         }
+         stage('Run Unit Tests') {
+                    steps {
+                        script {
+                            sh 'chmod +x mvnw'
+                            sh './mvnw test'
+                        }
+                    }
+                }
+                stage('SonarQube Analysis') {
+                            steps {
+                                script {
+                                    // Run the SonarQube analysis and send results to the SonarQube server
+                                    sh 'mvn sonar:sonar -Dsonar.projectKey=kaddem -Dsonar.host.url=http://localhost:9000 -Dsonar.login=squ_5aa3a90c18655b36d409d5c114e16c200a3527f4'
+                                }
+                            }
+                        }
+
 
         stage('Build JAR') {
             steps {
@@ -22,19 +34,11 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            steps {
-                script {
-                    // Run the SonarQube analysis and send results to the SonarQube server
-                    sh 'mvn sonar:sonar -Dsonar.projectKey=kaddem -Dsonar.host.url=http://localhost:9000 -Dsonar.login=squ_5aa3a90c18655b36d409d5c114e16c200a3527f4'
-                }
-            }
-        }
 
         stage('Deploy to Nexus') {
             steps {
                 script {
-                    // Deploy the built JAR to Nexus, skipping tests if desired
+
                     sh 'mvn deploy -DskipTests'
                 }
             }
@@ -52,7 +56,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    // Push the Docker image to the registry
+
                     docker.withRegistry('https://index.docker.io/v1/', 'b068dfbe-48f1-4914-9540-ccc68b451ac5') {
                         dockerImage.push()
                     }
@@ -60,14 +64,7 @@ pipeline {
             }
         }
 
-        stage('Run Unit Tests') {
-            steps {
-                script {
-                    sh 'chmod +x mvnw'
-                    sh './mvnw test'
-                }
-            }
-        }
+
 
         stage('Clean Up') {
             steps {
