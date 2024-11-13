@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'NidhalDalhoumi-5SE4-G8', url: 'https://github.com/Lamouchi-ale/kaddem.git', credentialsId: 'NidhalSecret'
+            }
+        }
+
+        stage('Run Unit Tests') {
+             steps {
+                 script {
+                     sh 'chmod +x mvnw'
+                     sh './mvnw test'
+                 }
+             }
+         }
+     
+        stage('Build JAR') {
+            steps {
+                script {
+                    sh 'mvn clean package'
+                }
+            }
+        }
+    }
+}
