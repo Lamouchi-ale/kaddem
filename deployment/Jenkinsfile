@@ -20,61 +20,6 @@ pipeline {
             }
         }
 
-        stage('Start SonarQube Docker Container') {
-            steps {
-                script {
-                    // Start SonarQube container
-
-                    sh '''
-                        echo "Nidhal1" | sudo -S docker run -d -p 9000:9000 -p 9092:9092 \
-                        -e SONARQUBE_JDBC_USERNAME=admin \
-                        -e SONARQUBE_JDBC_PASSWORD=admin \
-                        sonarqube:latest
-                    '''
-                    // Wait for SonarQube to be fully initialized
-                    sleep time: 60, unit: 'SECONDS'
-                }
-            }
-        }
-
-        stage('Generate SonarQube Token') {
-            steps {
-                script {
-                    // Generate token via SonarQube API
-                    def response = sh(
-                        script: '''
-                            curl -u admin:admin -X POST \
-                            "http://localhost:9000/api/user_tokens/generate?name=jenkins-token" \
-                            | jq -r '.token'
-                        ''', 
-                        returnStdout: true
-                    ).trim()
-
-                    // Store token for further stages
-                    env.SONARQUBE_TOKEN = response
-                }
-            }
-        }
-
-        stage('SonarQube Analysis') {
-            steps {
-                script {
-                    // Use generated token in SonarQube analysis
-                    sh "mvn sonar:sonar -Dsonar.projectKey=kaddem -Dsonar.host.url=http://localhost:9000 -Dsonar.login=${env.SONARQUBE_TOKEN}"
-                }
-            }
-        }
-
-        stage('Stop SonarQube Docker Container') {
-            steps {
-                script {
-                    // Stop and remove the SonarQube container
-                    sh 'sudo docker stop sonarqube'
-                    sh 'sudo docker rm sonarqube'
-                }
-            }
-        }
-
         stage('Build JAR') {
             steps {
                 script {
@@ -90,5 +35,7 @@ pipeline {
                 }
             }
         }
+
+        
     }
 }
