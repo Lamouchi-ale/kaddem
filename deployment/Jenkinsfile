@@ -25,7 +25,7 @@ pipeline {
                 script {
                     // Start SonarQube container
                     sh '''
-                        docker run -d --name sonarqube -p 9000:9000 \
+                        sudo sudo docker run -d -p 9000:9000 -p 9092:9092 \
                         -e SONARQUBE_JDBC_USERNAME=admin \
                         -e SONARQUBE_JDBC_PASSWORD=your_admin_password \
                         sonarqube:latest
@@ -68,8 +68,8 @@ pipeline {
             steps {
                 script {
                     // Stop and remove the SonarQube container
-                    sh 'docker stop sonarqube'
-                    sh 'docker rm sonarqube'
+                    sh 'sudo docker stop sonarqube'
+                    sh 'sudo docker rm sonarqube'
                 }
             }
         }
