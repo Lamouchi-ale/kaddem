@@ -15,7 +15,7 @@ services:
       MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: health,info,prometheus
       MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS: always
       MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED: "true"  # <-- Corrected to a string
-      MANAGEMENT_ENDPOINTS_ENABLED: true
+      MANAGEMENT_ENDPOINTS_ENABLED: "true"
     depends_on:
       - db
 
