@@ -26,7 +26,7 @@ pipeline {
                     // Start SonarQube container
 
                     sh '''
-                        echo "vagrant" | sudo -S docker run -d -p 9000:9000 -p 9092:9092 \
+                        echo "Nidhal" | sudo -S docker run -d -p 9000:9000 -p 9092:9092 \
                         -e SONARQUBE_JDBC_USERNAME=admin \
                         -e SONARQUBE_JDBC_PASSWORD=admin \
                         sonarqube:latest
