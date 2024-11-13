@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    environment {
+        // Environment variable for the generated token
+        SONARQUBE_TOKEN = ''
+    }
     stages {
         stage('Checkout') {
             steps {
@@ -8,22 +12,68 @@ pipeline {
         }
 
         stage('Run Unit Tests') {
-             steps {
-                 script {
-                     sh 'chmod +x mvnw'
-                     sh './mvnw test'
-                 }
-             }
-         }
+            steps {
+                script {
+                    sh 'chmod +x mvnw'
+                    sh './mvnw test'
+                }
+            }
+        }
+
+        stage('Start SonarQube Docker Container') {
+            steps {
+                script {
+                    // Start SonarQube container
+                    sh '''
+                        docker run -d --name sonarqube -p 9000:9000 \
+                        -e SONARQUBE_JDBC_USERNAME=admin \
+                        -e SONARQUBE_JDBC_PASSWORD=your_admin_password \
+                        sonarqube:latest
+                    '''
+                    // Wait for SonarQube to be fully initialized
+                    sleep time: 60, unit: 'SECONDS'
+                }
+            }
+        }
+
+        stage('Generate SonarQube Token') {
+            steps {
+                script {
+                    // Generate token via SonarQube API
+                    def response = sh(
+                        script: '''
+                            curl -u admin:admin -X POST \
+                            "http://localhost:9000/api/user_tokens/generate?name=jenkins-token" \
+                            | jq -r '.token'
+                        ''', 
+                        returnStdout: true
+                    ).trim()
+
+                    // Store token for further stages
+                    env.SONARQUBE_TOKEN = response
+                }
+            }
+        }
 
         stage('SonarQube Analysis') {
             steps {
                 script {
-                    sh 'mvn sonar:sonar -Dsonar.projectKey=kaddem -Dsonar.host.url=http://localhost:9000 -Dsonar.login=sqp_6ed12895ddc4dd95f1d602af830ed28c3e8238fa'
+                    // Use generated token in SonarQube analysis
+                    sh "mvn sonar:sonar -Dsonar.projectKey=kaddem -Dsonar.host.url=http://localhost:9000 -Dsonar.login=${env.SONARQUBE_TOKEN}"
                 }
             }
         }
-        
+
+        stage('Stop SonarQube Docker Container') {
+            steps {
+                script {
+                    // Stop and remove the SonarQube container
+                    sh 'docker stop sonarqube'
+                    sh 'docker rm sonarqube'
+                }
+            }
+        }
+
         stage('Build JAR') {
             steps {
                 script {
@@ -31,7 +81,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Deploy to Nexus') {
             steps {
                 script {
