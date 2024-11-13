@@ -25,9 +25,9 @@ pipeline {
                 script {
                     // Start SonarQube container
                     sh '''
-                        sudo sudo docker run -d -p 9000:9000 -p 9092:9092 \
+                        sudo docker run -d -p 9000:9000 -p 9092:9092 \
                         -e SONARQUBE_JDBC_USERNAME=admin \
-                        -e SONARQUBE_JDBC_PASSWORD=your_admin_password \
+                        -e SONARQUBE_JDBC_PASSWORD=admin \
                         sonarqube:latest
                     '''
                     // Wait for SonarQube to be fully initialized
