@@ -15,7 +15,15 @@ pipeline {
                  }
              }
          }
-     
+
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    sh 'mvn sonar:sonar -Dsonar.projectKey=kaddem -Dsonar.host.url=http://localhost:9000 -Dsonar.login=sqp_c73498cd81e24434421cc2d1829fcca1af259ec8'
+                }
+            }
+        }
+        
         stage('Build JAR') {
             steps {
                 script {
