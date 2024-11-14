@@ -16,6 +16,18 @@
     <properties>
         <java.version>1.8</java.version>
     </properties>
+    <distributionManagement>
+         <repository>
+             <id>deployment</id>
+             <name>Internal Releases</name>
+             <url>${NEXUS_REPO_URL}</url>
+         </repository>
+         <snapshotRepository>
+             <id>deployment</id>
+             <name>Internal Releases</name>
+             <url>${NEXUS_REPO_URL}</url>
+         </snapshotRepository>
+    </distributionManagement>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
