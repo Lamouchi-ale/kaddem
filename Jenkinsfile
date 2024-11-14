@@ -40,7 +40,7 @@ pipeline {
                         nexusUrl: "192.168.33.10:8081",
                         groupId: 'tn.esprit.spring',
                         artifactId: 'kaddem',
-                        version: '0.0.3',
+                        version: '0.0.3-SNAPSHOT',
                         repository: "kaddem",
                         credentialsId: "nexus",
                         artifacts: [
