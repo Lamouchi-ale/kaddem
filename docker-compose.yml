@@ -2,7 +2,7 @@ version: '3.8'
 services:
   app:
     build: .
-    image: kaddem:latest
+    image: houss12/kaddem-app:latest
     container_name: spring_boot_app
     ports:
       - "8089:8089"
