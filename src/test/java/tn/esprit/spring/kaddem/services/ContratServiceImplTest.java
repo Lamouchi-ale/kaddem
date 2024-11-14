@@ -111,6 +111,7 @@ class ContratServiceImplTest {
         etudiant.setContrats(new HashSet<>()); // Initialiser les contrats pour éviter NullPointerException
         Contrat contrat = new Contrat();
 
+        // Simuler le retour d'un Optional contenant un contrat pour éviter NullPointerException
         when(etudiantRepository.findByNomEAndPrenomE(nomE, prenomE)).thenReturn(etudiant);
         when(contratRepository.findById(idContrat)).thenReturn(Optional.of(contrat));
 
@@ -119,6 +120,7 @@ class ContratServiceImplTest {
         assertEquals(etudiant, result.getEtudiant(), "L'étudiant assigné doit être celui attendu");
         verify(contratRepository, times(1)).save(contrat);
     }
+
 
     @Test
     @Order(7)
@@ -135,12 +137,14 @@ class ContratServiceImplTest {
 
     @Test
     @Order(8)
+
     void retrieveAndUpdateStatusContrat() {
         Contrat contrat = new Contrat();
         contrat.setArchive(false);
         contrat.setDateFinContrat(new Date(System.currentTimeMillis() - 15 * 24 * 60 * 60 * 1000)); // Contrat expiré depuis 15 jours
 
-        List<Contrat> contrats = Collections.singletonList(contrat);
+        List<Contrat> contrats = new ArrayList<>(); // Initialiser la liste pour éviter NullPointerException
+        contrats.add(contrat);
 
         when(contratRepository.findAll()).thenReturn(contrats);
 
@@ -149,6 +153,7 @@ class ContratServiceImplTest {
         assertTrue(contrat.getArchive(), "Le contrat doit être archivé après expiration");
         verify(contratRepository, times(1)).save(contrat);
     }
+
 
     @Test
     @Order(9)
