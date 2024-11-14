@@ -1,15 +1,10 @@
 package tn.esprit.spring.kaddem.services;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import tn.esprit.spring.kaddem.entities.Contrat;
 import tn.esprit.spring.kaddem.entities.Etudiant;
 import tn.esprit.spring.kaddem.entities.Specialite;
@@ -21,18 +16,16 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(SpringExtension.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ContratServiceImplTest {
 
     @Mock
-    private ContratRepository contratRepository;
+    ContratRepository contratRepository;
 
     @Mock
-    private EtudiantRepository etudiantRepository;
+    EtudiantRepository etudiantRepository;
 
     @InjectMocks
-    private ContratServiceImpl contratService;
+    ContratServiceImpl contratService;
 
     @BeforeEach
     void setUp() {
@@ -40,133 +33,136 @@ class ContratServiceImplTest {
     }
 
     @Test
-    @Order(1)
-    void retrieveAllContrats() {
-        List<Contrat> contrats = Arrays.asList(new Contrat(), new Contrat());
-        when(contratRepository.findAll()).thenReturn(contrats);
+    void testRetrieveAllContrats() {
+        List<Contrat> contratList = Arrays.asList(new Contrat(), new Contrat());
+        when(contratRepository.findAll()).thenReturn(contratList);
 
         List<Contrat> result = contratService.retrieveAllContrats();
-
-        assertEquals(2, result.size());
+        assertEquals(2, result.size(), "Should return 2 contrats");
         verify(contratRepository, times(1)).findAll();
     }
 
     @Test
-    @Order(2)
-    void updateContrat() {
+    void testAddContrat() {
         Contrat contrat = new Contrat();
-        when(contratRepository.save(contrat)).thenReturn(contrat);
-
-        Contrat result = contratService.updateContrat(contrat);
-
-        assertNotNull(result, "Le contrat mis à jour ne doit pas être nul");
-        verify(contratRepository, times(1)).save(contrat);
-    }
-
-    @Test
-    @Order(3)
-    void addContrat() {
-        Contrat contrat = new Contrat();
+        contrat.setIdContrat(1);
         when(contratRepository.save(contrat)).thenReturn(contrat);
 
         Contrat result = contratService.addContrat(contrat);
-
-        assertNotNull(result, "Le contrat ajouté ne doit pas être nul");
+        assertEquals(1, result.getIdContrat(), "Contract ID should be 1");
         verify(contratRepository, times(1)).save(contrat);
     }
 
     @Test
-    @Order(4)
-    void retrieveContrat() {
-        int id = 1;
+    void testRetrieveContrat() {
         Contrat contrat = new Contrat();
-        when(contratRepository.findById(id)).thenReturn(Optional.of(contrat));
+        contrat.setIdContrat(1);
+        when(contratRepository.findById(1)).thenReturn(Optional.of(contrat));
 
-        Contrat result = contratService.retrieveContrat(id);
-
-        assertNotNull(result, "Le contrat récupéré ne doit pas être nul");
-        verify(contratRepository, times(1)).findById(id);
+        Contrat result = contratService.retrieveContrat(1);
+        assertNotNull(result, "Should retrieve contrat with ID 1");
+        assertEquals(1, result.getIdContrat());
+        verify(contratRepository, times(1)).findById(1);
     }
 
     @Test
-    @Order(5)
-    void removeContrat() {
-        int id = 1;
+    void testUpdateContrat() {
         Contrat contrat = new Contrat();
-        when(contratRepository.findById(id)).thenReturn(Optional.of(contrat));
+        contrat.setIdContrat(1);
+        when(contratRepository.save(contrat)).thenReturn(contrat);
 
-        contratService.removeContrat(id);
+        Contrat result = contratService.updateContrat(contrat);
+        assertNotNull(result, "Updated contrat should not be null");
+        assertEquals(1, result.getIdContrat());
+        verify(contratRepository, times(1)).save(contrat);
+    }
 
+    @Test
+    void testRemoveContrat() {
+        Contrat contrat = new Contrat();
+        contrat.setIdContrat(1);
+        when(contratRepository.findById(1)).thenReturn(Optional.of(contrat));
+
+        contratService.removeContrat(1);
         verify(contratRepository, times(1)).delete(contrat);
     }
 
     @Test
-    @Order(6)
-    void affectContratToEtudiant() {
+    void testAffectContratToEtudiant() {
         int idContrat = 1;
         String nomE = "John";
         String prenomE = "Doe";
 
         Etudiant etudiant = new Etudiant();
-        etudiant.setContrats(new HashSet<>()); // Initialiser les contrats pour éviter NullPointerException
-        Contrat contrat = new Contrat();
+        etudiant.setIdEtudiant(1);
+        etudiant.setContrats(new HashSet<>());
 
-        // Simuler le retour d'un Optional contenant un contrat pour éviter NullPointerException
+        Contrat contrat = new Contrat();
+        contrat.setIdContrat(idContrat);
+        contrat.setArchive(false);
+
         when(etudiantRepository.findByNomEAndPrenomE(nomE, prenomE)).thenReturn(etudiant);
-        when(contratRepository.findById(idContrat)).thenReturn(Optional.of(contrat));
+        when(contratRepository.findByIdContrat(idContrat)).thenReturn(contrat);
+        when(contratRepository.save(any(Contrat.class))).thenReturn(contrat);
 
         Contrat result = contratService.affectContratToEtudiant(idContrat, nomE, prenomE);
 
-        assertEquals(etudiant, result.getEtudiant(), "L'étudiant assigné doit être celui attendu");
+        assertNotNull(result.getEtudiant(), "Contrat should be assigned to an Etudiant");
+        assertEquals(etudiant, result.getEtudiant(), "Assigned student should match the expected Etudiant");
         verify(contratRepository, times(1)).save(contrat);
     }
 
-
     @Test
-    @Order(7)
-    void nbContratsValides() {
+    void testNbContratsValides() {
         Date startDate = new Date();
-        Date endDate = new Date(System.currentTimeMillis() + 86400000L * 30); // 30 jours dans le futur
+        Date endDate = new Date();
         when(contratRepository.getnbContratsValides(startDate, endDate)).thenReturn(5);
 
-        int result = contratService.nbContratsValides(startDate, endDate);
-
-        assertEquals(5, result, "Le nombre de contrats valides doit être de 5");
+        Integer result = contratService.nbContratsValides(startDate, endDate);
+        assertEquals(5, result, "Should return 5 valid contrats between the dates");
         verify(contratRepository, times(1)).getnbContratsValides(startDate, endDate);
     }
 
     @Test
-    @Order(8)
+    void testRetrieveAndUpdateStatusContrat() {
+        Contrat contrat1 = new Contrat();
+        contrat1.setIdContrat(1);
+        contrat1.setDateFinContrat(new Date(System.currentTimeMillis() - 15L * 24 * 60 * 60 * 1000));
+        contrat1.setArchive(false);
 
-    void retrieveAndUpdateStatusContrat() {
-        Contrat contrat = new Contrat();
-        contrat.setArchive(false);
-        contrat.setDateFinContrat(new Date(System.currentTimeMillis() - 15 * 24 * 60 * 60 * 1000)); // Contrat expiré depuis 15 jours
+        Contrat contrat2 = new Contrat();
+        contrat2.setIdContrat(2);
+        contrat2.setDateFinContrat(new Date(System.currentTimeMillis()));
+        contrat2.setArchive(false);
 
-        List<Contrat> contrats = new ArrayList<>(); // Initialiser la liste pour éviter NullPointerException
-        contrats.add(contrat);
-
+        List<Contrat> contrats = Arrays.asList(contrat1, contrat2);
         when(contratRepository.findAll()).thenReturn(contrats);
 
         contratService.retrieveAndUpdateStatusContrat();
 
-        assertTrue(contrat.getArchive(), "Le contrat doit être archivé après expiration");
-        verify(contratRepository, times(1)).save(contrat);
+        assertTrue(contrat1.getArchive(), "Contrat should be archived if it has expired");
+        assertTrue(contrat2.getArchive(), "Contrat should be archived if it ends today");
+        verify(contratRepository, times(2)).save(any(Contrat.class));
     }
 
-
     @Test
-    @Order(9)
-    void getChiffreAffaireEntreDeuxDates() {
+    void testGetChiffreAffaireEntreDeuxDates() {
         Date startDate = new Date();
-        Date endDate = new Date(System.currentTimeMillis() + 86400000L * 60); // 60 jours dans le futur
-        Contrat contrat = new Contrat();
-        contrat.setSpecialite(Specialite.IA);
+        Date endDate = new Date(System.currentTimeMillis() + 30L * 24 * 60 * 60 * 1000); // +30 days
 
-        when(contratRepository.findAll()).thenReturn(Collections.singletonList(contrat));
+        Contrat contrat1 = new Contrat();
+        contrat1.setSpecialite(Specialite.IA);
+
+        Contrat contrat2 = new Contrat();
+        contrat2.setSpecialite(Specialite.CLOUD);
+
+        List<Contrat> contrats = Arrays.asList(contrat1, contrat2);
+        when(contratRepository.findAll()).thenReturn(contrats);
 
         float result = contratService.getChiffreAffaireEntreDeuxDates(startDate, endDate);
 
-        assertTrue(result > 0, "Le chiffre d'affaires doit être positif pour la période donnée");
+        // Expected revenue: (300 for IA + 400 for CLOUD) for 1 month
+        float expectedRevenue = (300 + 400);
+        assertEquals(expectedRevenue, result, 0.01, "Chiffre d'affaire should match expected value");
     }
 }
