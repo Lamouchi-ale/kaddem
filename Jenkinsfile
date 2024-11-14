@@ -61,6 +61,7 @@ pipeline {
             steps {
                 script {
                     dir('kaddem') {
+                        sh 'docker-compose down --volumes || true'
                         sh 'docker-compose up -d'  
                     }
                 }
