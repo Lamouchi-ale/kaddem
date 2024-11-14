@@ -15,13 +15,13 @@ pipeline {
                 }
             }
         }
-        /* stage('SonarQube Analysis') {
+        stage('SonarQube Analysis') {
             steps {
                 script {
                     // Remplacer l'adresse et le token d'authentification
                     sh 'mvn sonar:sonar -Dsonar.projectKey=kaddem -Dsonar.host.url=http://192.168.33.10:9000 -Dsonar.login=squ_26cb70c0ca54fd40b7fe225766adba73962ece19'
                 }
             }
-        } */
+        } 
     }
 }
