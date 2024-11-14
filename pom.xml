@@ -69,7 +69,6 @@
         <scope>test</scope>
     </dependency>
 
-    <!-- Spring Boot Test (for integration testing and loading Spring context) -->
     <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-test</artifactId>
