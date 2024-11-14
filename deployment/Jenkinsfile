@@ -37,6 +37,24 @@ pipeline {
             }
         }
 
-        
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Ensure the correct Dockerfile and context are used
+                    dockerImage = docker.build("azizaydi/kaddem-app:${env.BUILD_ID}", '.')
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+
+                    docker.withRegistry('https://index.docker.io/v1/', 'dckr_pat_MkSX4zHHX0zHtGw1VuzPJT0wWh8') {
+                        dockerImage.push()
+                    }
+                }
+            }
+        }
     }
 }
