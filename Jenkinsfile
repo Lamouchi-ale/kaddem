@@ -6,7 +6,15 @@ pipeline {
                 git branch: 'bousrihrahma_5SE4_G8', url: 'https://github.com/Lamouchi-ale/kaddem.git'
             }
         }
-
+ stage('Compile code') {
+            steps {
+                script {
+                    echo "Starting Maven build..."
+                    sh 'mvn clean package'
+                    echo "Maven build completed!"
+                }
+            }
+        }/*
         stage('SonarQube Analysis') {
             steps {
                 script {
