@@ -36,6 +36,13 @@ pipeline {
                     sh 'mvn deploy -DskipTests'
                 }
             }
-        }
+         stage('Push Docker Image') {
+            steps {
+                script {
+                    sh 'docker login -u houss12 -p dckr_pat_OWY5P09g6zo8ACbu1u8NjcjUNNo'
+                    sh 'docker push ${DOCKER_IMAGE}'
+                }
+            }
+        }   }
     }
 }
