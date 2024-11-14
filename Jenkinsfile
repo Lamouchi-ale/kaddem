@@ -23,6 +23,13 @@ pipeline {
                 }
             }
         }
+          stage('Build JAR') {
+            steps {
+                script {
+                    sh 'mvn clean package'
+                }
+            }
+        }
         stage('Nexus') {
             steps {
                 script {
