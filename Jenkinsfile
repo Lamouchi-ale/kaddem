@@ -57,5 +57,14 @@ pipeline {
                 }
             }
         }
+            stage('Deploy with Docker Compose') {
+            steps {
+                script {
+                    dir('kaddem') {
+                        sh 'docker-compose up -d'  
+                    }
+                }
+            }
+        }
     }
 } 
