@@ -22,6 +22,13 @@ pipeline {
                     sh 'mvn sonar:sonar -Dsonar.projectKey=kaddem -Dsonar.host.url=http://192.168.33.10:9000 -Dsonar.login=squ_26cb70c0ca54fd40b7fe225766adba73962ece19'
                 }
             }
-        } 
+     stage('Deploy to Nexus') {
+            steps {
+                script {
+
+                    sh 'mvn deploy -DskipTests'
+                }
+            }
+        }   } 
     }
 }
