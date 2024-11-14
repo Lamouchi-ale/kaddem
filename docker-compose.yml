@@ -3,7 +3,7 @@ services:
   app:
     build: .
     image: kaddem:latest
-    container_name: spring_boot_app
+    container_name: springbootapp
     ports:
       - "8083:8083"
     environment:
