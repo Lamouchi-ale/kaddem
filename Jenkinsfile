@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         // Define environment variables
-        SONARQUBE_TOKEN = credentials('squ_f1e321a5358280c009c2cb33691990fb0c51d6a5') // Use credentials for SonarQube
+        
         DOCKER_CREDENTIALS_ID = 'a0e8eee8-ff55-43b2-b265-b5fe9d7fd5ec' // Define Docker credentials ID
         DOCKER_IMAGE = "houss12/kaddem-app:${env.BUILD_ID}"
     }
