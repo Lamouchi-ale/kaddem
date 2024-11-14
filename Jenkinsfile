@@ -71,6 +71,15 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy the spring boot application using docker compose'){
+      steps{
+        script {
+          echo 'Deploying Spring application with Mysql Container using Docker compose'
+          sh 'docker-compose -f docker-compose.yml up -d'
+        }
+      }
+    }
     }
 
     post {
