@@ -1,7 +1,7 @@
 pipeline {
     agent any
     stages {
-        stage('Checkout') {
+        stage('Git checkout') {
             steps {
                 git branch: 'bousrihrahma_5SE4_G8', url: 'https://github.com/Lamouchi-ale/kaddem.git'
             }
@@ -15,20 +15,20 @@ pipeline {
                 }
             }
         }
-        stage('SonarQube Analysis') {
+        stage('SonarQube') {
             steps {
                 script {
                     // Remplacer l'adresse et le token d'authentification
                     sh 'mvn sonar:sonar -Dsonar.projectKey=kaddem -Dsonar.host.url=http://192.168.33.10:9000 -Dsonar.login=squ_26cb70c0ca54fd40b7fe225766adba73962ece19'
                 }
             }
-     stage('Deploy to Nexus') {
+        }
+        stage('Nexus') {
             steps {
                 script {
-
                     sh 'mvn deploy -DskipTests'
                 }
             }
-        }   } 
+        }
     }
 }
