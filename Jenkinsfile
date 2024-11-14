@@ -76,7 +76,7 @@ pipeline {
       steps{
         script {
           echo 'Deploying Spring application with Mysql Container using Docker compose'
-          sh 'docker-compose -f docker-compose.yml up -d'
+          sh 'docker compose -f docker-compose.yml up -d'
         }
       }
     }
