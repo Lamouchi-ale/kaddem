@@ -48,7 +48,7 @@ pipeline {
             steps {
                 script {
                     // Deploy the JAR file to the Nexus repository
-                    sh 'mvn deploy -DskipTests'
+                    sh 'mvn deploy -DskipTests  --settings /usr/share/maven/conf/settings.xml'
                 }
             }
         }
