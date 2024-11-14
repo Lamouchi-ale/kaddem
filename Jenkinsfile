@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    environment {
+        // Définir une variable d'environnement pour l'image Docker
+        DOCKER_IMAGE = 'your-docker-image-name' // Remplacer par le nom de votre image Docker
+    }
     stages {
         stage('Git checkout') {
             steps {
@@ -23,7 +27,7 @@ pipeline {
                 }
             }
         }
-          stage('Build JAR') {
+        stage('Build JAR') {
             steps {
                 script {
                     sh 'mvn clean package'
@@ -37,12 +41,12 @@ pipeline {
                     nexusArtifactUploader(
                         nexusVersion: 'nexus3',
                         protocol: 'http',
-                        nexusUrl: "192.168.33.10:8081",
+                        nexusUrl: 'http://192.168.33.10:8081',
                         groupId: 'tn.esprit.spring',
                         artifactId: 'kaddem',
                         version: '0.0.3-SNAPSHOT',
-                        repository: "kaddem",
-                        credentialsId: "nexus",
+                        repository: 'kaddem',
+                        credentialsId: 'nexus', // Assurez-vous que cette ID est correcte dans Jenkins
                         artifacts: [
                             [artifactId: 'kaddem',
                              classifier: '',
@@ -54,13 +58,16 @@ pipeline {
                 }
             }
         }
-         stage('Push Docker Image') {
+        stage('Push Docker Image') {
             steps {
                 script {
+                    // Connexion à Docker Hub
                     sh 'docker login -u houss12 -p dckr_pat_OWY5P09g6zo8ACbu1u8NjcjUNNo'
+
+                    // Pousser l'image Docker
                     sh 'docker push ${DOCKER_IMAGE}'
                 }
             }
-        }   }
+        }
     }
 }
