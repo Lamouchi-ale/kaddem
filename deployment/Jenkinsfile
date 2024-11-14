@@ -20,6 +20,14 @@ pipeline {
                 }
             }
         }
+             stage('SonarQube Analysis') {
+                            steps {
+                                script {
+                                    // Run the SonarQube analysis and send results to the SonarQube server
+                                    sh 'mvn sonar:sonar -Dsonar.projectKey=kaddem -Dsonar.host.url=http://localhost:9000 -Dsonar.login=sqa_5c0f4183fc9a65a6c75174e866f25bbcebd7a989'
+                                }
+                            }
+                        }
 
         stage('Build JAR') {
             steps {
