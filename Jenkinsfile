@@ -51,7 +51,7 @@ pipeline {
             steps {
                 script {
 
-                    docker.withRegistry('https://index.docker.io/v1/', 'dckr_pat_sqcg7oKsxDvyDDyO3BIqVlJhjEk') {
+                    docker.withRegistry('https://index.docker.io/v1/', 'NidhalSecret') {
                         dockerImage.push()
                     }
                 }
