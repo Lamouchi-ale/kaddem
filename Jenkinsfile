@@ -69,8 +69,6 @@ pipeline {
         stage('Clean Up') {
             steps {
                 script {
-                    // Remove the Docker image after deployment
-                    sh "docker rmi azizaydi/kaddem-app:${env.BUILD_ID}"
 
                     // Remove stopped containers, unused volumes, and networks
                     sh 'docker container prune -f'
