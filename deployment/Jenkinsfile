@@ -3,7 +3,7 @@ pipeline {
     environment {
         // Environment variable for the generated token
         SONARQUBE_TOKEN = ''
-        NEXUS_REPO_URL = 'http://localhost/repository/maven-public/'  // Nexus repo URL
+        NEXUS_REPO_URL = 'http://localhost:8081/repository/maven-public/'  // Nexus repo URL
     }
     stages {
         stage('Checkout') {
