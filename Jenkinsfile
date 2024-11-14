@@ -25,7 +25,7 @@ pipeline {
                                         }
                                     }
                                 }
-        }
+       
 
         stage('Build JAR') {
             steps {
