@@ -2,8 +2,8 @@ pipeline {
     agent any
     environment {
         // Définir une variable d'environnement pour l'image Docker
-        DOCKER_IMAGE = 'rahma-bousrih-kaddem'
-        DOCKERHUB_CREDENTIALS_ID = 'docker'
+        DOCKER_IMAGE = 'rahma-bousrih-kaddem' // Utilisez cette variable pour l'image Docker
+        DOCKERHUB_CREDENTIALS_ID = 'docker'  // ID des credentials DockerHub dans Jenkins
     }
     stages {
         stage('Git checkout') {
@@ -65,17 +65,17 @@ pipeline {
                     echo 'Building Docker image...'
                     withCredentials([usernamePassword(credentialsId: DOCKERHUB_CREDENTIALS_ID, usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
                         sh '''
-                             docker build -t ${DOCKER_IMAGE_NAME}:latest .
+                             docker build -t ${DOCKER_IMAGE}:latest .
                              echo ${DOCKERHUB_PASSWORD} | docker login -u ${DOCKERHUB_USERNAME} --password-stdin
-                             docker tag ${DOCKER_IMAGE_NAME}:latest rahma473/${DOCKER_IMAGE_NAME}:latest
-                             docker push rahma473/${DOCKER_IMAGE_NAME}:latest
+                             docker tag ${DOCKER_IMAGE}:latest rahma473/${DOCKER_IMAGE}:latest
+                             docker push rahma473/${DOCKER_IMAGE}:latest
                         '''
                     }
                     echo 'Docker image built and pushed successfully!'
                 }
             }
         }
-         stage('Docker Compose Up') {
+        stage('Docker Compose Up') {
             steps {
                 script {
                     echo 'Starting services with Docker Compose...'
@@ -86,7 +86,5 @@ pipeline {
                 }
             }
         }
-    }
-   
     }
 }
