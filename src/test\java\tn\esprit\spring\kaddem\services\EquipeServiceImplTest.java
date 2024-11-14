@@ -15,10 +15,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class EquipeServiceImplTest {
 
     @Mock
-    private EquipeRepository equipeRepository; // Mock the repository
+    private EquipeRepository equipeRepository; 
 
     @InjectMocks
-    private EquipeServiceImpl equipeService; // Service under test
+    private EquipeServiceImpl equipeService; 
 
     private Equipe equipe;
     private Etudiant etudiant;
@@ -26,9 +26,8 @@ class EquipeServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this); // Initialize mocks
+        MockitoAnnotations.openMocks(this); 
 
-        // Initialize test data
         equipe = new Equipe();
         equipe.setIdEquipe(1);
         equipe.setNiveau(Niveau.JUNIOR);
@@ -39,7 +38,7 @@ class EquipeServiceImplTest {
         etudiant.setContrats(new HashSet<>());
 
         contrat = new Contrat();
-        contrat.setDateFinContrat(new Date(System.currentTimeMillis() - 10000000L)); // Date more than a year ago
+        contrat.setDateFinContrat(new Date(System.currentTimeMillis() - 10000000L)); 
         contrat.setArchive(false);
         etudiant.getContrats().add(contrat);
         equipe.getEtudiants().add(etudiant);
@@ -82,12 +81,11 @@ class EquipeServiceImplTest {
         equipeService.deleteEquipe(1);
 
         // Assert
-        verify(equipeRepository, times(1)).delete(equipe); // Verify that delete was called once
+        verify(equipeRepository, times(1)).delete(equipe); 
     }
 
     @Test
     void testEvoluerEquipes() {
-        // Arrange
         equipe.setNiveau(Niveau.JUNIOR);
         equipeRepository.save(equipe);
         List<Equipe> equipes = new ArrayList<>();
@@ -96,10 +94,8 @@ class EquipeServiceImplTest {
         when(equipeRepository.findAll()).thenReturn(equipes);
         when(equipeRepository.save(any(Equipe.class))).thenReturn(equipe);
 
-        // Act
         equipeService.evoluerEquipes();
 
-        // Assert
         assertEquals(Niveau.SENIOR, equipe.getNiveau()); // The equipe should evolve to SENIOR
         verify(equipeRepository, times(1)).save(equipe); // Verify save method was called once
     }
