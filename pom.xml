@@ -60,9 +60,7 @@
         <version>5.8.2</version>
         <scope>test</scope>
     </dependency>
-    </dependencies>
  <!-- Mockito -->
-    <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-core</artifactId>
         <version>4.0.0</version>
@@ -74,7 +72,7 @@
         <artifactId>spring-boot-starter-test</artifactId>
         <scope>test</scope>
     </dependency>
-         
+  </dependencies>
     <build>
         <plugins>
             <plugin>
