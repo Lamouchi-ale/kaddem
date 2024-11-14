@@ -3,7 +3,7 @@ pipeline {
     environment {
         // Define environment variables
         
-        DOCKER_CREDENTIALS_ID = 'a0e8eee8-ff55-43b2-b265-b5fe9d7fd5ec' // Define Docker credentials ID
+        DOCKER_CREDENTIALS_ID = '3e1a5f58-c5cc-4416-80c1-9c88c72540d1' // Define Docker credentials ID
         DOCKER_IMAGE = "houss12/kaddem-app:${env.BUILD_ID}"
     }
     stages {
