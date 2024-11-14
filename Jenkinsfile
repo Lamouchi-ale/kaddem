@@ -58,7 +58,7 @@ pipeline {
                 script {
                     // Build the Docker image using the Dockerfile in the current directory
                     //dockerImage = docker.build(DOCKER_IMAGE)
-                    sh 'docker build -t ${DOCKER_IMAGE}
+                    sh 'docker build -t ${DOCKER_IMAGE}'
                 }
             }
         }
