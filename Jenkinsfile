@@ -2,7 +2,8 @@ pipeline {
     agent any
     environment {
         // Définir une variable d'environnement pour l'image Docker
-        DOCKER_IMAGE = 'your-docker-image-name' // Remplacer par le nom de votre image Docker
+        DOCKER_IMAGE = 'rahma-bousrih-kaddem'
+        DOCKERHUB_CREDENTIALS_ID = 'docker'
     }
     stages {
         stage('Git checkout') {
@@ -58,16 +59,34 @@ pipeline {
                 }
             }
         }
-        stage('Push Docker Image') {
+        stage('Docker Build & Push') {
             steps {
                 script {
-                    // Connexion à Docker Hub
-                    sh 'docker login -u houss12 -p dckr_pat_OWY5P09g6zo8ACbu1u8NjcjUNNo'
-
-                    // Pousser l'image Docker
-                    sh 'docker push ${DOCKER_IMAGE}'
+                    echo 'Building Docker image...'
+                    withCredentials([usernamePassword(credentialsId: DOCKERHUB_CREDENTIALS_ID, usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                        sh '''
+                             docker build -t ${DOCKER_IMAGE_NAME}:latest .
+                             echo ${DOCKERHUB_PASSWORD} | docker login -u ${DOCKERHUB_USERNAME} --password-stdin
+                             docker tag ${DOCKER_IMAGE_NAME}:latest rahma473/${DOCKER_IMAGE_NAME}:latest
+                             docker push rahma473/${DOCKER_IMAGE_NAME}:latest
+                        '''
+                    }
+                    echo 'Docker image built and pushed successfully!'
                 }
             }
         }
+         stage('Docker Compose Up') {
+            steps {
+                script {
+                    echo 'Starting services with Docker Compose...'
+                    sh '''
+                         docker-compose up -d
+                    '''
+                    echo 'Services started successfully!'
+                }
+            }
+        }
+    }
+   
     }
 }
