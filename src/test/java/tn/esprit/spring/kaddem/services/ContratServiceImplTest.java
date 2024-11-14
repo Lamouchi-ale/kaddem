@@ -11,16 +11,12 @@ import tn.esprit.spring.kaddem.entities.Specialite;
 import tn.esprit.spring.kaddem.repositories.ContratRepository;
 import tn.esprit.spring.kaddem.repositories.EtudiantRepository;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class ContratServiceImplTest {
-
 
     @Mock
     private ContratRepository contratRepository;
@@ -99,6 +95,7 @@ class ContratServiceImplTest {
         String prenomE = "Doe";
 
         Etudiant etudiant = new Etudiant();
+        etudiant.setContrats(new HashSet<>()); // Initialiser les contrats pour éviter NullPointerException
         Contrat contrat = new Contrat();
 
         when(etudiantRepository.findByNomEAndPrenomE(nomE, prenomE)).thenReturn(etudiant);
@@ -128,7 +125,10 @@ class ContratServiceImplTest {
         contrat.setArchive(false);
         contrat.setDateFinContrat(new Date(System.currentTimeMillis() - 15 * 24 * 60 * 60 * 1000)); // 15 jours passés
 
-        when(contratRepository.findAll()).thenReturn(Arrays.asList(contrat));
+        List<Contrat> contrats = new ArrayList<>();
+        contrats.add(contrat);
+
+        when(contratRepository.findAll()).thenReturn(contrats);
 
         contratService.retrieveAndUpdateStatusContrat();
 
