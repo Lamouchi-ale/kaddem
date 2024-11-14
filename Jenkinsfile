@@ -8,15 +8,16 @@ pipeline {
     }
     stages {
         
+       
         stage('Checkout') {
             steps {
                 // Clone the repository using the specified credentials
-                git branch: 'houssem', 
-                    url: 'https://github.com/Lamouchi-ale/kaddem.git', 
-                    credentialsId: a0e8eee8-ff55-43b2-b265-b5fe9d7fd5ec
+                checkout([$class: 'GitSCM', 
+                          branches: [[name: '*/houssem']], 
+                          userRemoteConfigs: [[url: 'https://github.com/Lamouchi-ale/kaddem.git', credentialsId: 'a0e8eee8-ff55-43b2-b265-b5fe9d7fd5ec']]])
             }
         }
-
+    
       stage('SonarQube Analysis') {
     steps {
         script {
