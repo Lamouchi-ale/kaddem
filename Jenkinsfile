@@ -57,7 +57,8 @@ pipeline {
             steps {
                 script {
                     // Build the Docker image using the Dockerfile in the current directory
-                    dockerImage = docker.build(DOCKER_IMAGE)
+                    //dockerImage = docker.build(DOCKER_IMAGE)
+                    sh 'docker build -t ${DOCKER_IMAGE}
                 }
             }
         }
@@ -65,12 +66,8 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    // Push the Docker image to Docker Hub
-                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
-                        dockerImage.push()
-                    }
-                    // Optionally push the `latest` tag
-                    dockerImage.push('latest')
+                    sh 'docker login -u houss12 -p dckr_pat_OWY5P09g6zo8ACbu1u8NjcjUNNo'
+                    sh 'docker push ${DOCKER_IMAGE}'
                 }
             }
         }
