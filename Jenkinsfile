@@ -17,20 +17,14 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            steps {
-                script {
-                    // Run the SonarQube analysis and send results to the SonarQube server using credentials
-                    withCredentials([string(credentialsId: 'sonar-token-id', variable: 'SONAR_TOKEN')]) {
-                        sh """
-                            mvn sonar:sonar \
-                                -Dsonar.projectKey=kaddem \
-                                -Dsonar.host.url=http://localhost:9000 \
-                                -Dsonar.login=$SONAR_TOKEN
-                        """
-                    }
-                }
-            }
+       stage('SonarQube Analysis') {
+                                    steps {
+                                        script {
+                                            // Run the SonarQube analysis and send results to the SonarQube server
+                                            sh 'mvn sonar:sonar -Dsonar.projectKey=kaddem -Dsonar.host.url=http://localhost:9000 -Dsonar.login=squ_f1e321a5358280c009c2cb33691990fb0c51d6a5'
+                                        }
+                                    }
+                                }
         }
 
         stage('Build JAR') {
