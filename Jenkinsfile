@@ -26,7 +26,7 @@ pipeline {
                 mvn clean compile sonar:sonar \
                 -Dsonar.projectKey=kaddem \
                 -Dsonar.host.url=http://localhost:9000 \
-                -Dsonar.token=squ_43ec802670243f20d3a4b3d77242fef7fc6d5274 \
+                -Dsonar.token=squ_dcff9b1c5edfacce8ebf2c81912fe5c9f40b210f \
                 -Dsonar.java.binaries=target/classes
             """
                }
